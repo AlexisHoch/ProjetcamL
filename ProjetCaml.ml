@@ -1,55 +1,70 @@
-let l = open_in "C:/Users/valen/Documents/FAC albi/test.txt";;
-l;;
+let l ="C:/Users/pedago/Downloads/projetcaml/test.txt";;
 
-let liredico = let l = open_in "C:/Users/valen/Documents/FAC albi/test.txt" in
-let rec lire = fun()-> try  input_line l ::lire (l) with End_of_file-> close_in l 
-in lire();;
-
-let rec lire2 = fun(l)-> let x=try input_line l with
-End_of_file-> []  in x::lire1(l);;
-
-lire(l);;
-
-
-close_in l;;
-
-
-let liredico= let l = open_in "C:/Users/valen/Documents/FAC albi/test.txt" in
-	let rec lire()= try print_string(input_line l );print_newline()
-	with End_of_file -> close_in l
-in lire();;
 
 let dico nom_fichier =
 
   let f = open_in nom_fichier in
 
-  let rec dico_rec () =
+  let rec dico_rec =fun (m)->
 
-    try
+    (try
+		let s=input_line m in
+		s:: dico_rec(m)
 
-      input_line f::dico_rec()
+    with end_of_file -> let x=close_in m in [])
 
-    with End_of_file -> let x=close_in f in []
+  in dico_rec(f) ;;
 
-  in dico_rec() ;;
 
+dico(l);;
+  
+  
+  
+  
 type arbrepre =Feuille of string | Noeud of string*arbrepre list ;;
 
-let test= Noeud("",[Noeud("a",[Noeud("r",[Noeud("b",[Noeud("r",[Feuille("e")])])]);Feuille("b")])]);;
+let test= Noeud("a",[Noeud("r",[Noeud("b",[Noeud("r",[Feuille("e")])])]);Feuille("b")]);;
 
-let rec lire =fun 
-(Feuille(a))->a (*pour lire le premier mot *)
-|(Noeud(a,b::l))->a^lire(b);;
+
+
+
+(********************
+Longueur d'une chaîne
+*********************)
+let longChaine= fun s->
+    string_length s;;
+
+
+let niemeCar = fun (n,s)-> 
+   nth_char s (n-1);;
+
+let sousChaine = fun (s,n,m) -> 
+if m<n then ""
+else sub_string s (n-1) (m-n+1);;
+
+let tetec= fun 
+""-> failwith "La chaine est vide"
+| s-> niemeCar(1,s);;
+
+
+let tetes= fun s-> string_of_char(tetec(s));;
+
+
+let reste = fun 
+""-> failwith"La chaine est vide"
+| s-> sousChaine (s,2,longChaine(s));;
+
+
+
 
 
 
 let rec liret = fun
-(m,Feuille(f))-> longueur(m)=1 & m=f 
-|(m,Noeud(a,b::c::l))-> if longueur(m)=1 then  hd(m)=a else hd(m)=a &( liret(reste(m),liret(b))  or liret(reste(m),liret(c::l)) ) (*on teste que la premiere lettre de m soit egal au Noeud *)
-|(m,Noeud(a,b::l))-> if longueur(m)=1 then  hd(m)=a else hd(m)=a & liret(reste(m),liret(b)) ;;
+(m,Feuille(f))-> longChaine(m)=1 & m=f 
+|(m,Noeud(a,b::c::l))-> if longChaine(m)=1 then  tetes(m)=a else tetes(m)=a &(liret(reste(m),b)  or liret(reste(m),c)) (*on teste que la premiere lettre de m soit egal au Noeud *)
+|(m,Noeud(a,b::l))-> if longChaine(m)=1 then  tetes(m)=a else tetes(m)=a & liret(reste(m),b);;
 
-(* a tester * )
-
+(* a tester * ) 
 
 
 let mots=["arbre";"ab"];;
