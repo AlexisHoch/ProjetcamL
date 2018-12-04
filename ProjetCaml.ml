@@ -1,7 +1,8 @@
 let l ="C:/Users/pedago/Downloads/projetcaml/test.txt";;
+let l2="C:/Users/pedago/Downloads/projetcaml/dictionnaire_min.txt";;
+(*let l="C:/Users/valen/Documents/FAC albi/L3 info/Caml/projetcaml/test.txt";;*)
 
-
-let dico nom_fichier =
+let dicoToList nom_fichier =
 
   let f = open_in nom_fichier in
 
@@ -15,18 +16,29 @@ let dico nom_fichier =
 
   in dico_rec(f) ;;
 
+(*Premiere partie avec des listes *)
+(* let dictio=dico(l);; *)
+let dictio=dicoToList(l2);;
 
-dico(l);;
+let rec taille = fun 
+(a::l)->1+taille(l)
+|(_)->0;;
+
+
+taille(dictio);;
+
+
+let rec recherche = fun 
+(s,a::l)-> s=a or recherche(s,l)
+|(_)->false;;
+
+
+
+recherche("val",dictio);;(* #- : bool = true *)
+recherche("waza",dictio);;(* #- : bool = false *)
+recherche("abricot",dictio);;(* #- : bool = true *)
+
   
-  
-  
-  
-type arbrepre =Feuille of string | Noeud of string*arbrepre list ;;
-
-let test= Noeud("a",[Noeud("r",[Noeud("b",[Noeud("r",[Feuille("e")])])]);Feuille("b")]);;
-
-
-
 
 (********************
 Longueur d'une chaîne
@@ -59,15 +71,24 @@ let reste = fun
 
 
 
-let rec liret = fun
-(m,Feuille(f))-> longChaine(m)=1 & m=f 
-|(m,Noeud(a,b::c::l))-> if longChaine(m)=1 then  tetes(m)=a else tetes(m)=a &(liret(reste(m),b)  or liret(reste(m),c)) (*on teste que la premiere lettre de m soit egal au Noeud *)
-|(m,Noeud(a,b::l))-> if longChaine(m)=1 then  tetes(m)=a else tetes(m)=a & liret(reste(m),b);;
-
-(* a tester * ) 
 
 
-let mots=["arbre";"ab"];;
-Noeud("",[(*rempir*)]);
-let rec creearbre = fun 
-(a::l)-> 
+type arbrepre =  Noeud of string*bool*arbrepre list ;;
+
+let test= Noeud("",true,[Noeud("a",false,[Noeud("r",false,[Noeud("b",true,[Noeud("r",false,[Noeud("e",true,[])])])]);Noeud("b",true,[])]);Noeud("b",false,[Noeud("o",true,[])])]);;
+
+let test= Noeud("a",false,[  Noeud("r",false,[Noeud("b",true,[Noeud("r",false,[Noeud("e",true,[])])])]);Noeud("b",true,[]);Noeud("c",true,[])]);;
+
+(* let rec test=fun
+(m,Noeud("",_,a::b::l))->test(m,) 
+(m,Noeud(s,t,a::b::l))-> if s=tetes(m) then recherchearbre(m,Noeud(s,t,l)) else test(m,) *)
+
+
+let rec recherchearbre = fun
+(m,Noeud("",t,b::l))->recherchearbre(m,b) or recherchearbre(m,Noeud("",t,l))
+|(m,Noeud(a,t,[]))-> longChaine(m)=1 & m=a
+|(m,Noeud(a,t,b::c::l))->  if longChaine(m)=1 then  m=a & t else tetes(m)=a &(recherchearbre(reste(m),b)  or recherchearbre(m,Noeud(a,t,c::l)))  (*on teste que la premiere lettre de m soit egal au Noeud *)
+|(m,Noeud(a,t,[b]))-> if longChaine(m)=1 then  m=a & t else tetes(m)=a & recherchearbre(reste(m),b);;
+
+trace"recherchearbre";;
+recherchearbre("bo",test);;

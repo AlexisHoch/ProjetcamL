@@ -1,0 +1,2 @@
+On a choisi de définir  un arbre de prefixe pour représenter le dictionnaire, et une liste de couple (string, bool) pour le plateau de jeu
+La solution sera sous forme de liste de mots
