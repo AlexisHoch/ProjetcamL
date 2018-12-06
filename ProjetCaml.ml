@@ -38,7 +38,67 @@ recherche("val",dictio);;(* #- : bool = true *)
 recherche("waza",dictio);;(* #- : bool = false *)
 recherche("abricot",dictio);;(* #- : bool = true *)
 
-  
+
+
+
+(*  *)
+let test= Noeud("",true,[Noeud("a",false,[Noeud("r",false,[Noeud("b",true,[Noeud("r",false,[Noeud("e",true,[])])])]);Noeud("b",true,[])]);Noeud("b",false,[Noeud("o",true,[])])]);;
+type arbrepre =  Noeud of string*bool*arbrepre list ;;
+
+(* Test la presence d'un string dans une liste *)
+let rec estPresentString = fun
+(mot, s::l) -> mot=s or estPresent(mot, l)
+|(_, []) -> false;;
+(* estPresent : 'a * 'a list -> bool = <fun> *)
+
+
+(* Compare l'égalité entre deux noeuds *)
+let NoeudEgaux = fun
+(Noeud(s, _, _), Noeud(s2, _, _) ) -> s=s2;;
+(*NoeudEgaux : arbrepre * arbrepre -> bool = <fun>*)
+
+
+(* Test la présence d'un noeud dans une liste *)
+let rec estPresentNoeud = fun
+(Noeud(s, b, liste),Noeud(s2, _, _)::l) -> s=s2 or estPresentNoeud(Noeud(s, b, liste), l)
+|(_, []) -> false;;
+(* #estPresentNoeud : arbrepre * arbrepre list -> bool = <fun> *)
+
+
+(* Le filtrage n'est pas exhaustif car je ne gère pas le cas où le noeud n'est pas présent dans la liste
+car cette fonction ne sera utilisé uniquement que lorsque le noeud n1 sera présent dans n2
+ *)
+(* Retourne le noeud présent dans la liste *)
+let rec noeudPresentReturn = fun
+(n1, n2::l) -> if NoeudEgaux(n1, n2) then n2 else noeudPresentReturn(n1, l);;
+(* noeudPresentReturn : arbrepre * arbrepre list -> arbrepre = <fun> *)
+
+let lTestNoeud = [Noeud("a",false,[]); Noeud("r",false,[]); Noeud("a",false,[]); Noeud("e",true,[Noeud("z",true,[])])];;
+
+estPresentNoeud(Noeud("e",true,[]), lTestNoeud);;
+estPresentNoeud(Noeud("z",true,[]), lTestNoeud);;
+noeudPresentReturn(Noeud("e",true,[]), lTestNoeud);;
+
+(* Tests de la fonctions estPresent *)
+let l = ["abc"; "exist"; "true"; "false"];;
+estPresent("abc", l);;
+estPresent("test", l);;
+estPresent("false", l);;
+
+let Arbre = Noeud("", false, []);;
+
+let listToTree = fun
+(mot::liste, Noeud(s, b, l)) -> listToTreeRec(mot, Noeud(s, b, l))
+|(_, Noeud(s, b, l)) -> Noeud("", false, []);;
+
+
+(* Fonctions de créatuon de noeuds *)
+let rec listToTreeRec = fun 
+
+|(mot,  Noeud(s, b, l)) ->let noeud = Noeud(tetes(mot), longChaine(s)=1, []) in  
+							if estPresentNoeud(noeud, l) then listToTreeRec(reste(mot), noeudPresentReturn(noeud, l))
+															else if not estPresentNoeud(noeud, l) & longChaine(s)<>1 then (noeud::l) and listToTreeRec(reste(mot), noeud)
+															else (noeud::l);;
 
 (********************
 Longueur d'une chaîne
