@@ -1,0 +1,22 @@
+﻿On a choisi de définir  un arbre de prefixe pour représenter le dictionnaire, et une liste de couple (string, bool) pour le plateau de jeu
+La solution sera sous forme de liste de mots.
+les tâches a réaliser:
+	-transformer le dictionnaire en arbre préfixe 
+	-cree des fonction pour rechercher des mots dans cet abre 
+	-cree une liste de 16  couple(string,bool) qui représentera le plateau de jeu
+	-faire une fonction qui a partir de  la liste de 16 couple et de l'abre nous donnera tout les mots possibles (backtracking)
+une fois cela accomplie on pourra passer au meilleur mots possible.
+
+répartition des tâches : 
+	alexis: 
+		-transformer le dictionnaire en arbre préfixe 
+		-faire une fonction qui a partir de  la liste de 16 couple et de l'abre nous donnera tout les mots possibles (backtracking)
+	valentin:
+		-cree des fonction pour rechercher des mots dans cet abre 
+		-faire une fonction qui a partir de  la liste de 16 couple et de l'abre nous donnera tout les mots possibles (backtracking)
+
+Test:
+	-on testera la fonction de recherche avec des mots connue d'abord dans un arbre simple cree à la main et ensuite avec le dico 
+	-test des fonctions auxiliaire 
+	-test sur le parcours du parcourd de jeu 
+	-test de la derniere fonction 
