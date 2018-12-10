@@ -129,36 +129,45 @@ let remplace = fun
 (*lettre vect vect *)
 let test=fun(jeu,x,y)-> jeu.(x).(y)<-remplace(jeu.(x).(y));;
 
-
+*)
 
 
 
 let jeudestring="angldlpccouatoxm";;
-let visite=[|-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1|];;
+let visite=[-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1];;
 
 			[0,1,2,3
 			 4,5,6,7
 			 8,9,10,11
-			 12,13,14,15,]
+			 12,13,14,15]
 
 let possible  = fun 
-(0)->[|1;4;5|]
-|(1)->[|0;2;4;5;6|]
-|(2)->[|1;3;5;6;7|]
-|(3)->[|2;6;7|]
-|(4)->[|0;1;5;8;9|]
-|(5)->[|0;1;2;4;6;8;9;10|]
-|(6)->[|1;2;3;5;7;9;10;11|]
-|(7)->[|2;3;6;10;11|]
-|(8)->[|4;5;9;12;13|]
-|(9)->[|4;5;6;8;10;12;13;14|]
-|(10)->[|5;6;7;9;14;15|]
-|(11)->[|6;7;10;14;15|]
-|(12)->[|8;9;13|]
-|(13)->[|8;9;10;12;14|]
-|(14)->[|9;10;11;13;15|]
-|(15)->[|10;11;14|];;
-*)
+(0)->[1;4;5]
+|(1)->[0;2;4;5;6]
+|(2)->[1;3;5;6;7]
+|(3)->[2;6;7]
+|(4)->[0;1;5;8;9]
+|(5)->[0;1;2;4;6;8;9;10]
+|(6)->[1;2;3;5;7;9;10;11]
+|(7)->[2;3;6;10;11]
+|(8)->[4;5;9;12;13]
+|(9)->[4;5;6;8;10;12;13;14]
+|(10)->[5;6;7;9;14;15]
+|(11)->[6;7;10;14;15]
+|(12)->[8;9;13]
+|(13)->[8;9;10;12;14]
+|(14)->[9;10;11;13;15]
+|(15)->[10;11;14];;
+
+
+let rec modifliste= fun
+(nb,0,a::liste)-> nb::liste
+|(nb,n,a::liste)-> a::modifliste(nb,n-1,liste)
+|(_,_,[])->failwith"indice pas dans la liste";;
+
+
+modifliste(2,1,[1;4;5]);;
+
 let l ="C:/Users/pedago/Downloads/projetcaml/test.txt";;
 let l2="C:/Users/pedago/Downloads/projetcaml/dictionnaire_min.txt";;
 (*let l="C:/Users/valen/Documents/FAC albi/L3 info/Caml/projetcaml/test.txt";;*)
@@ -267,6 +276,7 @@ let pre3=[Noeud("a", false,[Noeud("r", false,[Noeud ("b", false, aux2("uste", [N
 
 let pre=aux("arbre",[]);;
 creebranche("arbuste",pre);;
+
 (*avec 1 mot cree sa  branche ! que si elle existe pas sinon cree la fin du mot *)
 let rec creebranche = fun
 (mot,Noeud(a,t,l)::liste)-> if  tetes(mot)=a then Noeud(a,t,creebranche(reste(mot),l))::liste else Noeud(a,t,l)::creebranche(mot,liste)
@@ -294,7 +304,7 @@ creearbre(dictio,[]);;
 
 (*Chercher dans un arbre *)
 let rec recherchearbre = fun 
-(mot,Noeud(a,t,l)::liste)-> if longChaine(mot)=1 then tetes(mot)=a & t or recherchearbre(mot,liste) else if tetes(mot)=a then  recherchearbre(reste(mot),l) else recherchearbre(mot,liste)
+(mot,Noeud(a,t,l)::liste)-> if longChaine(mot)=1 then (tetes(mot)=a & t) or recherchearbre(mot,liste) else if tetes(mot)=a then  recherchearbre(reste(mot),l) else recherchearbre(mot,liste)
 |(mot,[])->false;;
 (*recherchearbre : string * arbrepre list -> bool = <fun>*)
 
@@ -335,7 +345,7 @@ recherche("bonjour",dictio);;
 recherche("je",dictio);;
 recherche("suis",dictio);;
 recherche("waza",dictio);;
-recherche("val",dictio);;1
+recherche("val",dictio);;
 recherche("abricot",dictio);;
 (*
 #- : bool = true
@@ -350,14 +360,55 @@ Sys__time() -. time;;(*2 sec sur moon ordi *)
 
 
 
+let rec recherchearbre = fun 
+(mot,Noeud(a,t,l)::liste)-> if longChaine(mot)=1 then (tetes(mot)=a & t) or recherchearbre(mot,liste) else if tetes(mot)=a then  recherchearbre(reste(mot),l) else recherchearbre(mot,liste)
+|(mot,[])->false;;
 
 
 
+let rec recherchearbre2 = fun 
+(mot,Noeud(a,t,l)::liste)-> longChaine(mot)=1 & ((mot=a & t) or recherchearbre2(mot,liste)) or ( tetes(mot)=a  &  recherchearbre2(reste(mot),l)) or recherchearbre2(mot,liste)
+|(mot,[])->false;;
+
+recherchearbre2("bonjour",arbredico);;
+recherchearbre2("je",arbredico);;
+recherchearbre2("suis",arbredico);;
+recherchearbre2("waza",arbredico);;
+recherchearbre2("val",arbredico);;
+recherchearbre2("abricot",arbredico);;
+
+(*
+
+- : bool = true
+#- : bool = true
+#- : bool = true
+#- : bool = false
+#- : bool = true
+#- : bool = true
+
+*)
+(*
+let time = Sys__time();;
+recherche("bonjour",dictio);;
+recherche("je",dictio);;
+recherche("suis",dictio);;
+recherche("waza",dictio);;
+recherche("val",dictio);;
+recherche("abricot",dictio);;
+Sys__time() -. time;;
+
+let time2 = Sys__time();;
+recherchearbre2("bonjour",arbredico);;
+recherchearbre2("je",arbredico);;
+recherchearbre2("suis",arbredico);;
+recherchearbre2("waza",arbredico);;
+recherchearbre2("val",arbredico);;
+recherchearbre2("abricot",arbredico);;
+
+Sys__time() -. time2;;(*2 sec sur moon ordi *)
 
 
-
-
-
+*)
 
 
 
