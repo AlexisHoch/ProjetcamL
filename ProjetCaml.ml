@@ -1,5 +1,5 @@
 (*
-
+Partie  de recherche :
 
 (*  *)
 let test= Noeud("",true,[Noeud("a",false,[Noeud("r",false,[Noeud("b",true,[Noeud("r",false,[Noeud("e",true,[])])])]);Noeud("b",true,[])]);Noeud("b",false,[Noeud("o",true,[])])]);;
@@ -134,10 +134,9 @@ let test=fun(jeu,x,y)-> jeu.(x).(y)<-remplace(jeu.(x).(y));;
 
 
 
-
-let l ="C:/Users/pedago/Downloads/projetcaml/test.txt";;
-let l2="C:/Users/pedago/Downloads/projetcaml/dictionnaire_min.txt";;
-(*let l="C:/Users/valen/Documents/FAC albi/L3 info/Caml/projetcaml/test.txt";;*)
+(*Partie Stable*)
+ (*  chemin sera a modifier en fonction de la ou est dictionnaire  *)
+let chemin="C:/Users/valen/Documents/FAC albi/L3 info/Caml/projetcaml/dictionnaire_min.txt";;
 
 let dicoToList nom_fichier =
 
@@ -156,7 +155,7 @@ let dicoToList nom_fichier =
 (*Premiere partie avec des listes *)
 (* let dictio=dico(l);; *)
 
-let dictio=dicoToList(l2);;
+let dictio=dicoToList(chemin);;
 
 let rec taille = fun 
 (a::l)->1+taille(l)
@@ -238,12 +237,10 @@ let pre2=aux("bo",pre);;
        [Noeud ("b", false, [Noeud ("r", false, [Noeud ("e", true, [])])])])]);
   Noeud ("b", false, [Noeud ("o", true, [])])]
 *)
-let pre3=[Noeud("a", false,[Noeud("r", false,[Noeud ("b", false, aux2("uste", [Noeud ("r", false, [Noeud ("e", true, [])])]))])])];;
 
 
 
-let pre=aux("arbre",[]);;
-creebranche("arbuste",pre);;
+
 
 
 (*avec 1 mot cree sa  branche ! que si elle existe pas sinon cree la fin du mot *)
@@ -252,18 +249,10 @@ let rec creebranche = fun
 |(mot,[])->aux(mot,[]);;
 (*creebranche : string * arbrepre list -> arbrepre list = <fun>*)
 
-(*
-let rec creearbre = fun
-(mot::dico,Noeud(a,t,l)::liste)->if longChaine(mot)=1 & tetes(mot)=a then [Noeud(a,true,l)::liste] else   if tetes(mot)=a then creearbre(reste(mot)::dico,l) else creearbre(mot::dico,liste)
-|(mot::dico,[])-> creearbre(dico,aux(mot,[]))
-|([],listarbre) ->listarbre;;
 
-let rec creearbre= fun 
-(mot::dico,[Noeud(a,t,l)::liste])-> if tetes(mot)=a then  else creearbre(dico,aux(mot,[Noeud(a,t,l)::liste]))
-|(mot::dico,[])-> creearbre(dico,aux(mot,[]))
-|([],listarbre) ->listarbre;;
+let pre=aux("arbre",[]);;
+creebranche("arbuste",pre);;
 
-*)
 (*a partir du'une liste de mots cree l'arbre *)
 
 let rec creearbre =fun
@@ -274,7 +263,21 @@ let rec creearbre =fun
 
 
 creearbre(["arbre";"bo"],[]);;
-creearbre(dictio,[]);;
+(*
+#- : arbrepre list =
+ [Noeud
+   ("a", false,
+    [Noeud
+      ("r", false,
+       [Noeud ("b", false, [Noeud ("r", false, [Noeud ("e", true, [])])])])]);
+  Noeud ("b", false, [Noeud ("o", true, [])])]
+#
+*)
+
+
+let time = Sys__time();;
+let arbredico =creearbre(dictio,[]);;
+Sys__time() -. time;;(*0.351 sec sur ordi fac  avec ordinateur de valentin 2 sec *)
 
 (*Chercher dans un arbre *)
 
@@ -291,29 +294,15 @@ let rec recherchearbre = fun
 recherchearbre("arbre",arbre);;(*true*)
 recherchearbre("bo",arbre);;(*true*)
 
-
-(*ces test sont la pour verifier aux *)
-
-recherchearbre("arbre",pre2);;(*true*)
-recherchearbre("bo",pre2);;(*true*)
-
-let rec arbrepossible = fun 
-(mot,Noeud(a,t,l)::liste) -> mot=a or arbrepossible(mot,liste)
-|_-> false;;
-
-(* #arbrepossible : string * arbrepre list -> bool = <fun> *)
-
-let arbredico =creearbre(dictio,[]);;
-
-arbrepossible("z",arbredico);;
-
-
+let time = Sys__time();;
 recherchearbre("bonjour",arbredico);;
 recherchearbre("je",arbredico);;
 recherchearbre("suis",arbredico);;
 recherchearbre("waza",arbredico);;
 recherchearbre("val",arbredico);;
 recherchearbre("abricot",arbredico);;
+Sys__time() -. time;;(*avec ordinateur de valentin 0.234 se *)
+
 
 (*#- : bool = true
 #- : bool = true
@@ -322,12 +311,15 @@ recherchearbre("abricot",arbredico);;
 #- : bool = true
 #- : bool = true*)
 
+
 recherche("bonjour",dictio);;
 recherche("je",dictio);;
 recherche("suis",dictio);;
 recherche("waza",dictio);;
 recherche("val",dictio);;
 recherche("abricot",dictio);;
+
+
 (*
 #- : bool = true
 #- : bool = true
@@ -337,24 +329,29 @@ recherche("abricot",dictio);;
 #- : bool = true*)
 
 
-let time = Sys__time();;
-let arbredico =creearbre(dictio,[]);;
-Sys__time() -. time;;(*0.351 sec sur ordi fac *)
+let rec arbrepossible = fun 
+(mot,Noeud(a,t,l)::liste) -> mot=a or arbrepossible(mot,liste)
+|_-> false;;
+
+(* #arbrepossible : string * arbrepre list -> bool = <fun> *)
+
+arbrepossible("z",arbredico);;
 
 
 
 
-let jeudestring="angl
-				 dlpc
-				 coua
-				 toxm";;
+
+
+
+
+let jeudestring="angldlpccouatoxm";;
 let visite=[-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1];;
 
 			(*[0,1,2,3
 			 4,5,6,7
 			 8,9,10,11
 			 12,13,14,15]*)
-
+(* Possible permet de connaitre les indice possible a partir d'un donnée*)
 let possible  = fun 
 (0)->[1;4;5]
 |(1)->[0;2;4;5;6]
@@ -401,24 +398,28 @@ egal(1,1,[0;1;2]);; (* - : bool = true
 
 let rec mots =fun
 (indice::liste,visite,jeu,Noeud(a,t,l)::arbre)-> if egal(-1,indice,visite) then (*  tester si le mot existe et si on a une suite possible *)
+												
 													let test = string_of_char(jeu.[indice]) in 
+												
 													if arbrepossible(test,Noeud(a,t,l)::arbre) then 
+
 														test ^ mots(possible(indice),modifliste(0,indice,visite),jeu,l)	
+													
 													else ""
+												
 												else  mots(liste,visite,jeu,Noeud(a,t,l)::arbre)
 |(_,_,"",_)-> ""
 |([],_,_,_)-> "";;
 (* mots : int list * int list * string * arbrepre list -> string = <fun> *)
+(* Le filtrage n'est pas exhaustif mais ce n'est  pas grave car l'abre ne sera jamais vide *)
 
 mots([0],visite,jeudestring,arbredico);;
 mots([0],visite2,jeudestring,arbredico);;
 
-
-
 let rec main = fun 
 (indice::liste ,visite,jeu,arbre) -> [mots([indice],visite,jeu,arbre)]@ main(liste,visite,jeu,arbre)
 |([],_,_,_)->[];;
-(* main : int list * int list * string * arbrepre list -> string list = <fun> *)
+(* main : int list * int list  * string * arbrepre list -> string list = <fun> *)
 
 let listeind = [0;1;2;3;4;5;6;7;8;9;10;11;12;13;14;15];;
 
